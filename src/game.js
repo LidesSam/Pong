@@ -18,51 +18,25 @@ var ry=10
 var rvy=0
 var rspeed=1
 
-
-class ball{
-    constructor(){
-        this.mode = "stop";
-        this.posx = 0;
-        this.posy = 0;
-        this.size = 4;
-        this.velx=0;
-        this.vely=0;
-    }
-
-    update(delta){
-        this.posx=0;
-
-    }
-
-    handleInput(e){
-
-    }
-
-}
-
-class playerRect{
-    constructor(){
-
-    }
-
-    update(delta){
-        
-    }
-
-    
-    handleInput(e){
-        
-    }
-}
+var ball  = null
 
 initialize()
 
 function initialize(){
     //alert("initialize")
+
+    
+
     canvas = document.getElementById("canvas")
     canvasContext = canvas.getContext("2d")
     limitx = canvas.width;
     limity=canvas.height;
+
+
+    ball  = new Ball(100,100,50,50)
+    ball.set_velocity(1,1)
+    ball.set_world_bounds(0,0,limitx,limity)
+
     setInterval(tick,100)
     document.addEventListener('keypress',logkey);
 }
@@ -79,8 +53,10 @@ function tick(){
 }
 
 function update(delta){
-    px += velx*delta*0.1;
-    py += vely*delta*0.1;
+    delta*=0.1
+    ball.update(delta)
+    px += velx*delta;
+    py += vely*delta;
     
     if( px<=4){px=5; velx=1;}
     
@@ -97,7 +73,7 @@ function update(delta){
 
     /// paleta
 
-    ry+=rvy*rspeed*delta*0.1
+    ry+=rvy*rspeed*delta
     if(ry<=0){
         ry=0
     }
@@ -113,13 +89,17 @@ function render(delta){
     clearCanvas()
 
  //ball   
+
+    canvasContext.fillStyle="red";
+    canvasContext.fillRect(ball.x-ball.width/2,ball.y-ball.height/2,ball.width,ball.height)
     canvasContext.fillStyle="black";
     canvasContext.fillRect(px-4,py-4,8,8)
 
+
+//left player 
     canvasContext.fillRect(rx,ry,rw,rh)
-    
     canvasContext.fillRect(limitx/2-1,2,2,limity-4)
-      
+ 
 }
 
 function clearCanvas(){
